@@ -16,9 +16,28 @@
         <property name="password" value="${jdbc.password}"/>
     </bean>
     <!--创建sqlsessionFacttory-->
-    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
+
+    <!-- 把交给IOC管理 SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
         <property name="typeAliasesPackage" value="com.itheima.domain"/>
+
+        <!-- 传入PageHelper的插件 -->
+        <!--PageHelper是mybatis分页工具-->
+        <property name="plugins">
+            <array>
+                <!-- 传入插件的对象 -->
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <props>
+                            <!--数据库方言-->
+                            <prop key="helperDialect">oracle</prop>
+                            <prop key="reasonable">true</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
     </bean>
     <!--mapper代理对象-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
