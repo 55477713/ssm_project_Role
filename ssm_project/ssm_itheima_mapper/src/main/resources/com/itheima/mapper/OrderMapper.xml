@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itheima.mapper.OrderMapper">
+    <resultMap id="orderMap" type="orders">
+        <id column="id" property="id"/>
+<!--配置订单与产品的一对一关系-->
+        <!--column:用于给查询条件传值-->
+        <association property="product" javaType="product" column="productId" select="com.itheima.mapper.ProductMapper.findProductById" fetchType="lazy"/>
+        <association property="member"  javaType="member"  column="memberId"    select="com.itheima.mapper.MemberMapper.findById" fetchType="lazy"/>
+        <!--订单与旅客的一对多关系-->
+        <collection property="travellers" ofType="traveller" column="id" select="com.itheima.mapper.TravellerMapper.findByOrdersId" fetchType="lazy"/>
+    </resultMap>
+    <select id="findAll" resultMap="orderMap">
+    SELECT * from orders
+</select>
+    <select id="findById" parameterType="string" resultMap="orderMap">
+        SELECT * from ORDERS WHERE id=#{id}
+    </select>
+
+</mapper>
